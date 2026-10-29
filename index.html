@@ -3,116 +3,216 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Multi-Platform Bot Demo</title>
+  <title>Omnichannel AI Vision Merchant Hub</title>
   <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-    body { background: #f0f2f5; padding: 15px; color: #333; }
-    .header { background: #1877f2; color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; }
-    .card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    h3 { margin-bottom: 10px; color: #1877f2; }
-    input, button, select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #1877f2; color: white; border: none; font-weight: bold; cursor: pointer; }
-    .chat-box { height: 250px; overflow-y: auto; border: 1px solid #eee; padding: 10px; background: #fafafa; border-radius: 5px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
-    .msg { max-width: 80%; padding: 8px 12px; border-radius: 15px; font-size: 14px; }
-    .user { background: #0084ff; color: white; align-self: flex-end; }
-    .bot { background: #e4e6eb; color: black; align-self: flex-start; }
-    .img-preview { max-width: 100px; max-height: 100px; border-radius: 5px; margin-top: 5px; display: block; }
+    :root {
+      --primary: #4F46E5;
+      --primary-hover: #4338CA;
+      --bg: #F3F4F6;
+      --card-bg: #FFFFFF;
+      --text: #1F2937;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 15px; }
+    .header { background: linear-gradient(135deg, #4F46E5, #06B6D4); color: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .header h1 { font-size: 22px; margin-bottom: 5px; }
+    .header p { font-size: 13px; opacity: 0.9; }
+    
+    .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+    @media(min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+    
+    .card { background: var(--card-bg); padding: 18px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .card h2 { font-size: 16px; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    label { font-size: 12px; font-weight: bold; margin-bottom: 4px; display: block; color: #4B5563; }
+    input, select, textarea, button { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #D1D5DB; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: var(--primary); }
+    
+    button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    button:hover { background: var(--primary-hover); }
+    
+    .product-list { display: flex; flex-direction: column; gap: 10px; max-height: 200px; overflow-y: auto; }
+    .product-item { display: flex; align-items: center; gap: 10px; padding: 8px; border: 1px solid #E5E7EB; border-radius: 8px; background: #FAFAFA; }
+    .product-item img { width: 40px; height: 40px; object-fit: cover; border-radius: 6px; }
+    .product-info { font-size: 12px; flex-grow: 1; }
+    
+    .chat-box { height: 280px; overflow-y: auto; border: 1px solid #E5E7EB; padding: 12px; background: #F9FAFB; border-radius: 8px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
+    .msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+    .msg.bot { background: #E5E7EB; color: #1F2937; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .msg img { max-width: 120px; border-radius: 6px; margin-top: 6px; display: block; }
+    
+    .tag { display: inline-block; background: #EEF2FF; color: var(--primary); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 4px; }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <h2>🛍️ AI Product Vision Auto-Reply Bot</h2>
-    <p>Facebook, WhatsApp, TikTok & Imo Demo</p>
+    <h1>🛍️ AI Merchant Automation Hub</h1>
+    <p>Facebook, WhatsApp, TikTok & IMO-er AI Auto-Reply Manager</p>
   </div>
 
-  <!-- Product Catalog -->
-  <div class="card">
-    <h3>১. প্রোডাক্ট আপলোড (ক্যাটালগ)</h3>
-    <input type="text" id="pName" placeholder="প্রোডাক্টের নাম (যেমন: Red Silk Saree)">
-    <input type="text" id="pPrice" placeholder="দাম (যেমন: ১২০০ টাকা)">
-    <input type="text" id="pStock" placeholder="স্টক ও কালার (যেমন: লাল কালার ৫ পিস আছে)">
-    <button onclick="saveProduct()">প্রোডাক্ট সেভ করুন</button>
-    <div id="status" style="font-size:12px; color:green;"></div>
-  </div>
+  <div class="grid">
+    <!-- Section 1: Catalog -->
+    <div class="card">
+      <h2>📦 1. Product Catalog Upload</h2>
+      <label>Product-er Name:</label>
+      <input type="text" id="pName" placeholder="e.g. Designer Silk Saree">
+      
+      <label>Dam (Price):</label>
+      <input type="text" id="pPrice" placeholder="e.g. 2500 BDT">
+      
+      <label>Stock & Available Color:</label>
+      <input type="text" id="pStock" placeholder="e.g. Red (5 pcs), Blue (2 pcs) Stock-e ache">
+      
+      <label>Product Photo:</label>
+      <input type="file" id="pImg" accept="image/*">
+      
+      <button onclick="addProduct()">Add to Catalog</button>
 
-  <!-- Live Chat Test -->
-  <div class="card">
-    <h3>২. কাস্টমার চ্যাট ও ফটো স্ক্যান সিমুলেটর</h3>
-    <select id="platform">
-      <option>Facebook Messenger</option>
-      <option>WhatsApp Business</option>
-      <option>TikTok Inbox</option>
-      <option>IMO Inbox</option>
-    </select>
-
-    <div class="chat-box" id="chatBox">
-      <div class="msg bot">হ্যালো! যেকোনো প্রোডাক্টের ছবি বা স্ক্রিনশট পাঠান, আমি স্টক ও দাম জানিয়ে দেব।</div>
+      <h2 style="margin-top: 15px;">📋 Catalog List</h2>
+      <div class="product-list" id="catalogList">
+        <p style="font-size:12px; color:#6B7280;">Kono product add kora hoyni.</p>
+      </div>
     </div>
 
-    <label style="font-size:12px; font-weight:bold;">প্রোডাক্টের ছবি নির্বাচন করুন (SS/Photo):</label>
-    <input type="file" id="imgInput" accept="image/*" onchange="previewFile()">
-    <input type="text" id="userMsg" placeholder="মেসেজ লিখুন (যেমন: এটার দাম কত?)...">
-    <button onclick="sendMsg()">মেসেজ ও ছবি পাঠান</button>
+    <!-- Section 2: Simulator -->
+    <div class="card">
+      <h2>💬 2. Live Platform Simulator</h2>
+      
+      <label>Platform Select Karun:</label>
+      <select id="platformSelect">
+        <option value="Facebook Inbox">Facebook Messenger</option>
+        <option value="WhatsApp">WhatsApp Business</option>
+        <option value="TikTok">TikTok Inbox</option>
+        <option value="IMO">IMO Inbox</option>
+      </select>
+
+      <div class="chat-box" id="chatBox">
+        <div class="msg bot">
+          <span class="tag">AI Bot</span><br>
+          Hello! Ami apnar AI Assistant. Customer kono product-er photo ba screenshot pathale ami photo scan kore catalog theke dam o stock bolbo.
+        </div>
+      </div>
+
+      <label>Customer Photo/Screenshot Pathale Select Karun:</label>
+      <input type="file" id="userImg" accept="image/*" onchange="loadUserImg()">
+      
+      <input type="text" id="userText" placeholder="Customer-er text message (e.g. Etar dam koto?)...">
+      <button onclick="sendSimulatedMessage()">Send Customer Message</button>
+    </div>
   </div>
 
   <script>
-    let savedProduct = null;
-    let selectedImageSrc = null;
+    let catalog = [];
+    let currentSelectedUserImg = null;
 
-    function saveProduct() {
+    function addProduct() {
       const name = document.getElementById('pName').value;
       const price = document.getElementById('pPrice').value;
       const stock = document.getElementById('pStock').value;
-      if(!name || !price) { alert("দয়া করে নাম ও দাম লিখুন"); return; }
-      savedProduct = { name, price, stock };
-      document.getElementById('status').innerText = "✅ ক্যাটালগে প্রোডাক্ট সেভ হয়েছে!";
-    }
+      const imgFile = document.getElementById('pImg').files[0];
 
-    function previewFile() {
-      const file = document.getElementById('imgInput').files[0];
-      const reader = new FileReader();
-      reader.onloadend = function () {
-        selectedImageSrc = reader.result;
+      if (!name || !price) {
+        alert("Doya kore product-er name abong price likhun!");
+        return;
       }
-      if (file) reader.readAsDataURL(file);
+
+      if (imgFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          saveToCatalog(name, price, stock, e.target.result);
+        };
+        reader.readAsDataURL(imgFile);
+      } else {
+        saveToCatalog(name, price, stock, 'https://via.placeholder.com/40');
+      }
     }
 
-    function sendMsg() {
-      const msg = document.getElementById('userMsg').value;
+    function saveToCatalog(name, price, stock, imgSrc) {
+      catalog.push({ name, price, stock, imgSrc });
+      renderCatalog();
+      document.getElementById('pName').value = '';
+      document.getElementById('pPrice').value = '';
+      document.getElementById('pStock').value = '';
+      document.getElementById('pImg').value = '';
+      alert("Product Catalog-e add hoyeche!");
+    }
+
+    function renderCatalog() {
+      const listDiv = document.getElementById('catalogList');
+      if (catalog.length === 0) {
+        listDiv.innerHTML = '<p style="font-size:12px; color:#6B7280;">Kono product add kora hoyni.</p>';
+        return;
+      }
+      listDiv.innerHTML = catalog.map((item, index) => `
+        <div class="product-item">
+          <img src="${item.imgSrc}" alt="img">
+          <div class="product-info">
+            <b>${item.name}</b><br>
+            Price: ${item.price} | Stock: ${item.stock}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadUserImg() {
+      const file = document.getElementById('userImg').files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          currentSelectedUserImg = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function sendSimulatedMessage() {
+      const platform = document.getElementById('platformSelect').value;
+      const text = document.getElementById('userText').value;
       const chatBox = document.getElementById('chatBox');
-      const platform = document.getElementById('platform').value;
 
-      if (!msg && !selectedImageSrc) return;
-
-      // User Message
-      let userHtml = `<div class="msg user"><b>[${platform}]</b><br>${msg}`;
-      if(selectedImageSrc) {
-        userHtml += `<br><img src="${selectedImageSrc}" class="img-preview">`;
+      if (!text && !currentSelectedUserImg) {
+        alert("Kono message ba image select karun!");
+        return;
       }
-      userHtml += `</div>`;
-      chatBox.innerHTML += userHtml;
 
-      // Bot Response Simulation
+      // Render User Message
+      let userMsgContent = `<span class="tag">${platform}</span><br>`;
+      if (text) userMsgContent += `${text}`;
+      if (currentSelectedUserImg) userMsgContent += `<br><img src="${currentSelectedUserImg}">`;
+
+      chatBox.innerHTML += `<div class="msg user">${userMsgContent}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Simulate AI Vision Processing
       setTimeout(() => {
         let botReply = "";
-        if (selectedImageSrc) {
-          if (savedProduct) {
-            botReply = `🤖 <b>AI Vision Detected:</b> আমি ছবিটি অ্যানালাইস করে আপনার প্রোডাক্টটি চিনে ফেলেছি!<br><br><b>প্রোডাক্ট:</b> ${savedProduct.name}<br><b>দাম:</b> ${savedProduct.price}<br><b>স্টক বিবরণ:</b> ${savedProduct.stock}<br><br>আপনি কি এটি অর্ডার করতে চান?`;
+
+        if (currentSelectedUserImg) {
+          if (catalog.length > 0) {
+            // Pick matched catalog item
+            const matchedProduct = catalog[catalog.length - 1]; 
+            botReply = `🤖 <b>AI Vision Scan Complete:</b><br>Ami apnar pathano photo scan kore product-ti chinte perechi!<br><br>` +
+                       `📌 <b>Product:</b> ${matchedProduct.name}<br>` +
+                       `💰 <b>Dam:</b> ${matchedProduct.price}<br>` +
+                       `📦 <b>Stock Status:</b> ${matchedProduct.stock}<br><br>` +
+                       `Apni ki ei product-ti order korte chan? Apnar address o phone number din.`;
           } else {
-            botReply = `🤖 <b>AI Vision Detected:</b> আমি ছবিটি পেয়েছি, তবে এটি ক্যাটালগের কোনো প্রোডাক্টের সাথে মিলছে না। অনুগ্রহ করে প্রথমে ১ নম্বর সেকশন থেকে ক্যাটালগে প্রোডাক্ট আপলোড করুন।`;
+            botReply = `🤖 <b>AI Vision Alert:</b> Ami photo-ti peyechi, tobe apnar Catalog-e kono product upload kora nei. Doya kore age 1 no. section theke Product Catalog setup karun.`;
           }
         } else {
-          botReply = `🤖 আমাদের যেকোনো প্রোডাক্টের ছবি বা ভিডিও স্ক্রিনশট পাঠালে আমি সাথে সাথে দাম ও স্টক জানিয়ে দেব।`;
+          botReply = `🤖 Apnar message-ti peyechi. Amader kono product-er photo ba screenshot thakle pathan, AI auto-scan kore dam o stock janaye dibe!`;
         }
+
         chatBox.innerHTML += `<div class="msg bot">${botReply}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
-      }, 1000);
 
-      // Reset
-      document.getElementById('userMsg').value = '';
-      document.getElementById('imgInput').value = '';
-      selectedImageSrc = null;
+        // Reset
+        document.getElementById('userText').value = '';
+        document.getElementById('userImg').value = '';
+        currentSelectedUserImg = null;
+      }, 1200);
     }
   </script>
 </body>
